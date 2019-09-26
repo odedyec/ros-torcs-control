@@ -1,0 +1,13 @@
+# torcs ros drive ctrl params
+
+MAX_SPEED: 360
+MIN_SPEED: 20
+K_steer: 1.2
+K_curve: 1000.
+K_pitch: 5.
+K_distance: 12.
+K_reduce_speed_from_steer: 12.
+K_accelerate: 1.
+K_brake: 5.
+RPM_GEAR_UP: 6000
+RPM_GEAR_DOWN: 1000

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="param_file" default="$(find torcs_ros_drive_ctrl)/config/my_drive_ctrl.yaml"/>
+  <node pkg="torcs_ros_drive_ctrl" type="torcs_driver.py" name="torcs_driver" output="screen">
+    <rosparam file="$(arg param_file)" command="load"/>
+  </node>
+</launch>
+
