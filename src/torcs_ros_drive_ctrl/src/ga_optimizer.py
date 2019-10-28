@@ -48,8 +48,7 @@ def mutation(agents, mutation_prob):
     for i, agent in enumerate(agents):
         if i == 0:
             continue
-        if random.random() < mutation_prob:
-            agent.mutate()
+        agent.mutate(mutation_prob)
     return agents
 
 

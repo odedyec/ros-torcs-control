@@ -169,6 +169,7 @@ class Driver:
         rospy.sleep(0.01)
         with self._lock:
             self.drive_cmd()
+        return rospy.is_shutdown()
 
     def spin(self):
         while not rospy.is_shutdown():

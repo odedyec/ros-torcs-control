@@ -118,3 +118,10 @@ class Controller:
         f.write('RPM_GEAR_UP: {}\n'.format(self.RPM_GEAR_UP))
         f.write('RPM_GEAR_DOWN: {}\n'.format(self.RPM_GEAR_DOWN))
         f.close()
+
+    def print_controller(self):
+        with open(self.filename, 'r') as f:
+            line = f.readline()
+            while line:
+                print line
+                line = f.readline()

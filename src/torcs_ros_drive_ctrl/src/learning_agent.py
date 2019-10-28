@@ -58,41 +58,39 @@ class LearningAgent(Agent):
         rospy.set_param('/torcs_driver/K_accelerate', self.K_accelerate)
         rospy.set_param('/torcs_driver/K_brake', self.K_brake)
         
-    def test_driver(self, agent_id, generation):
+    def test_driver(self, agent_id, generation, test_duration=60.):
         self.list_to_params(self.genes)
         self.set_ros_params()
         driver = Driver("_agent_{}_{}".format(generation, agent_id))
         start_time = time.time()
         self.sim_client = subprocess.Popen('roslaunch torcs_ros_bringup torcs_ros.launch rviz:=false driver:=false', shell=True)
         self.sim = subprocess.Popen('torcs -r /home/oded/.torcs/config/raceman/quickrace.xml', shell=True)
-        test_duration = 10  # seconds
         while time.time() - start_time < test_duration:
-            driver.spin_once()
+            if driver.spin_once():
+                break
         distance_passed = driver.get_distance()
         driver.controller.write_controller_to_file()
         # del driver
         # self.sim_client.kill()
         # time.sleep(1)
         # self.sim.kill()
-        subprocess.Popen('rosnode kill /torcs_ros/torcs_img_publisher_node', shell=True)
-        subprocess.Popen('rosnode kill /torcs_ros/torcs_ros_client_node', shell=True)
+        subprocess.Popen('rosnode kill /torcs_ros/torcs_img_publisher_node', shell=True, stdout=0)
+        subprocess.Popen('rosnode kill /torcs_ros/torcs_ros_client_node', shell=True, stdout=0)
         subprocess.Popen('killall -9 torcs-bin', shell=True)
         return distance_passed
 
     def calc_fitness(self, agent_id, generation):
-        distance_passed = self.test_driver(agent_id, generation)
+        distance_passed = self.test_driver(agent_id, generation, max(1, int(generation / 6.)) * 24)
         self.fitness = distance_passed
 
 
 if __name__ == '__main__':
-    gens = 3
-    pops = 10
+    gens = 30
+    pops = 30
     agents = [LearningAgent() for _ in range(pops)]
-    agents = ga_optimize(agents, gens, pops, selection_amount=0.3, mutate_probability=0.7)
+    agents = ga_optimize(agents, gens, pops, selection_amount=0.3, mutate_probability=0.3)
     print agents[0].fitness
     print agents[0].genes
-    print agents[1].fitness
-    print agents[1].genes
 
 
 

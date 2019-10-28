@@ -46,13 +46,10 @@ class Agent:
     def set_fitness(self, fitness):
         self.fitness = fitness
 
-    def mutate(self):
-        self.genes = []
+    def mutate(self, mutate_prob=1.):
         for gene_num in range(len(self.constraints)):
-            self.genes.append(random.uniform(self.constraints[gene_num][0],
-                                             self.constraints[gene_num][1]
-                                             )
-                              )
+            if random.random() < mutate_prob:
+                self.genes[gene_num] = random.uniform(self.constraints[gene_num][0], self.constraints[gene_num][1])
 
     def crossover(self, other, alpha):
         if not 0. < alpha < 1.:
